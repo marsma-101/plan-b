@@ -166,12 +166,17 @@
     # Plain route-registration carrier; host and port come from the app's
     # webStartup provider, with these deployment fallbacks. The dist is served by
     # the web-runtime row below through the fallback seat.
+    #
+    # 【plan-b / 流程B 改动】默认端口 3080 → 3081
+    #   原因：流程A（官方 web profile）占用 3080；流程B 要能同时在跑而不打架。
+    #   语义不变：命令行 --port 仍然优先，这里只改「没给 --port 时」的兜底值。
+    #   还原方法：把 3081 改回 3080。
     - id: webserver
       name: '@deepseek-ai/dsh-host-webserver'
       inject: [webStartup]
       config:
         host: !!js ctx.webStartup.host ?? '127.0.0.1'
-        port: !!js ctx.webStartup.port ?? 3080
+        port: !!js ctx.webStartup.port ?? 3081
         compression: gzip
         compressionLevel: 1
         compressionThresholdBytes: 1024
